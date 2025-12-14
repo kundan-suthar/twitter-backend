@@ -5,7 +5,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createTweet = asyncHandler(async (req, res) => {
   //TODO: create tweet
-  const { content } = req.body;
+  const { content, title, color, isPinned } = req.body;
   const userid = req.user._id;
   console.log("content= ", content);
 
@@ -15,7 +15,10 @@ const createTweet = asyncHandler(async (req, res) => {
 
   const tweet = await Tweet.create({
     content,
+    title,
     owner: userid,
+    color,
+    isPinned,
   });
   return res
     .status(201)
@@ -45,6 +48,11 @@ const updateTweet = asyncHandler(async (req, res) => {
 
 const deleteTweet = asyncHandler(async (req, res) => {
   //TODO: delete tweet
+  const { tweetId } = req.body;
+  const tweet = await Tweet.deleteOne({ _id: tweetId });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, tweet, "user tweets deleted successfully"));
 });
 
 export { createTweet, getUserTweets, updateTweet, deleteTweet };
