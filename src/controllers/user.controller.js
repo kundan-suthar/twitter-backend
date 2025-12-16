@@ -52,7 +52,7 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   if (existedUser) {
-    throw new ApiError(409, "User with email or username already exists");
+    throw new ApiError(409, { error: "User with email or username already exists" });
   }
   //console.log(req.files);
 

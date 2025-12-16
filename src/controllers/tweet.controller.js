@@ -5,24 +5,26 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 const createTweet = asyncHandler(async (req, res) => {
   //TODO: create tweet
-  const { content, title, color, isPinned } = req.body;
+  const { content } = req.body;
   const userid = req.user._id;
   console.log("content= ", content);
 
   if (!content) {
     throw new ApiError(400, "content required");
   }
+  try {
+    const tweet = await Tweet.create({
+      content,
+      owner: userid,
 
-  const tweet = await Tweet.create({
-    content,
-    title,
-    owner: userid,
-    color,
-    isPinned,
-  });
-  return res
-    .status(201)
-    .json(new ApiResponse(200, tweet, "tweet created successfully"));
+    });
+    return res
+      .status(201)
+      .json(new ApiResponse(200, tweet, "tweet created successfully"));
+  } catch (error) {
+    throw new ApiError(400, " unable to create tweet");
+  }
+
 });
 
 const getUserTweets = asyncHandler(async (req, res) => {
@@ -44,6 +46,7 @@ const getUserTweets = asyncHandler(async (req, res) => {
 
 const updateTweet = asyncHandler(async (req, res) => {
   //TODO: update tweet
+
 });
 
 const deleteTweet = asyncHandler(async (req, res) => {

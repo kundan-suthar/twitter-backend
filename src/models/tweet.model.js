@@ -6,22 +6,6 @@ const tweetSchema = new Schema(
       type: String,
       required: true,
     },
-    title: {
-      type: String,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-    color: {
-      type: String,
-      required: true,
-    },
-    isPinned: {
-      type: Boolean,
-      required: true,
-    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
