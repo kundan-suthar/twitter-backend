@@ -18,15 +18,56 @@ const createTweet = asyncHandler(async (req, res) => {
       owner: userid,
 
     });
+    const createdTweet = await Tweet.find({ "_id": tweet._id })
+      .populate("owner", "username fullName avatar")
+      .lean();
+    const transformedTweet = createdTweet.map((tweet) => ({
+      tweetId: tweet._id,
+      content: tweet.content,
+      createdAt: tweet.createdAt,
+      user: {
+        id: tweet.owner._id,
+        username: tweet.owner.username,
+        fullName: tweet.owner.fullName,
+        avatar: tweet.owner.avatar,
+      },
+    }));
+
     return res
       .status(201)
-      .json(new ApiResponse(200, tweet, "tweet created successfully"));
+      .json(new ApiResponse(200, transformedTweet[0], "tweet created successfully"));
   } catch (error) {
     throw new ApiError(400, " unable to create tweet");
   }
 
 });
 
+const getAllTweets = asyncHandler(async (req, res) => {
+  //TODO: get all tweets
+  try {
+    const tweets = await Tweet.find()
+      .populate("owner", "username fullName avatar") // select only required fields
+      .lean(); // converts Mongoose docs → plain JS objects
+
+    const transformedTweets = tweets.map((tweet) => ({
+      tweetId: tweet._id,
+      content: tweet.content,
+      createdAt: tweet.createdAt,
+      user: {
+        id: tweet.owner._id,
+        username: tweet.owner.username,
+        fullName: tweet.owner.fullName,
+        avatar: tweet.owner.avatar,
+      },
+    }));
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, transformedTweets, "tweets fetched successfully"));
+  } catch (error) {
+    throw new ApiError(400, " unable to fetch tweets");
+  }
+});
 const getUserTweets = asyncHandler(async (req, res) => {
   // TODO: get user tweets
   try {
@@ -58,4 +99,4 @@ const deleteTweet = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, tweet, "user tweets deleted successfully"));
 });
 
-export { createTweet, getUserTweets, updateTweet, deleteTweet };
+export { createTweet, getUserTweets, updateTweet, deleteTweet, getAllTweets };
