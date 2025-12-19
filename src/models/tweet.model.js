@@ -6,10 +6,18 @@ const tweetSchema = new Schema(
       type: String,
       required: true,
     },
+    postImage: {
+      type: String, // cloudinary url
+    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    likesCount: {
+      type: Number,
+      default: 0,
+    },
+
   },
   { timestamps: true }
 );
