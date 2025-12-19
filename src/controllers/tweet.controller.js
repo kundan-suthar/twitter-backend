@@ -34,6 +34,7 @@ const createTweet = asyncHandler(async (req, res) => {
     createdAt: tweet.createdAt,
     isLiked: false,
     likesCount: tweet.likesCount,
+    commentsCount: tweet.commentsCount,
     user: {
       id: tweet.owner._id,
       username: tweet.owner.username,
@@ -69,6 +70,7 @@ const getAllTweets = asyncHandler(async (req, res) => {
       createdAt: tweet.createdAt,
       likesCount: tweet.likesCount,
       isLiked: likedSet.has(tweet._id.toString()),
+      commentsCount: tweet.commentsCount,
       user: {
         id: tweet.owner._id,
         username: tweet.owner.username,
